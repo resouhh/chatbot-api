@@ -1,38 +1,22 @@
 from flask import Flask, request, jsonify
-from emotion import detect_happiness  # Make sure this module is correctly implemented and accessible
+from flask_cors import CORS
+import emotion  # Import your emotion detection script
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for frontend communication
 
-@app.route("/detect", methods=["POST"])
-def detect():
-    print("Request received!")  # Debug log for request received
-    try:
-        # Get JSON data from the request
-        data = request.get_json()
-        print("Received data:", data)  # Debug log for received data
-        
-        # Validate the request data
-        if not data or "message" not in data:
-            print("Invalid request: No 'message' provided")
-            return jsonify({"error": "No 'message' provided"}), 400
+@app.route('/chat', methods=['POST'])
+def chat():
+    data = request.json
+    user_message = data.get("message", "")
 
-        # Extract the message
-        message = data["message"]
-        print("Message:", message)  # Debug log for the message content
+    # Emotion Detection (assuming detect_emotion function exists)
+    detected_emotion = emotion.detect_emotion(user_message)  # Modify based on your emotion.py logic
 
-        # Process the message with the emotion detection function
-        is_happy = detect_happiness(message)
-        response_text = (
-            "I sense happiness in your message! 😊" if is_happy else "Cheer up! It'll get better!"
-        )
-        print("Response:", response_text)  # Debug log for the response content
+    # Chatbot logic (modify as needed)
+    bot_response = f"I detected {detected_emotion}. How can I help?"  # Replace with actual chatbot logic
 
-        # Return the response
-        return jsonify({"response": response_text})
+    return jsonify({"response": bot_response})
 
-    except Exception as e:
-        print("Error occurred:", str(e))  # Debug log for any exception
-        return jsonify({"error": "An error occurred"}), 500
-
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5001)  # Ensure it runs on the specified port
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001, debug=True)
