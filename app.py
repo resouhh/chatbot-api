@@ -6,8 +6,10 @@ import emotion  # Import your emotion detection script
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend communication
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
+    if request.method == 'POST':
+        return jsonify({"message": "POST request received at /, but try /chat instead"}), 400
     return "Service is running!"
 
 @app.route('/chat', methods=['POST'])
