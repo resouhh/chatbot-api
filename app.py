@@ -17,11 +17,11 @@ def chat():
     data = request.json
     user_message = data.get("message", "")
 
-    # Emotion Detection (assuming detect_emotion function exists)
-    detected_emotion = emotion.detect_emotion(user_message)  # Modify based on your emotion.py logic
-
-    # Chatbot logic (modify as needed)
-    bot_response = f"I detected {detected_emotion}. How can I help?"  # Replace with actual chatbot logic
+    # Happiness Detection (using detect_happiness function from emotion.py)
+    if emotion.detect_happiness(user_message):
+        bot_response = "I detected happiness! How can I help?"
+    else:
+        bot_response = "I didn't detect any happiness. How can I assist you?"
 
     return jsonify({"response": bot_response})
 
