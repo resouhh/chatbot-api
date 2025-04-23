@@ -34,8 +34,10 @@ def detect():
         print("Error occurred:", str(e))  # Debug log for any exception
         return jsonify({"error": "An error occurred"}), 500
 
+import os
+
 if __name__ == "__main__":
-    import os
-    port = int(os.environ.get("PORT", 5001))
-    app.run(debug=False, host="0.0.0.0", port=port)
+    port = int(os.environ.get("PORT", 5000))  # Use Render's assigned port
+    app.run(host="0.0.0.0", port=port)
+
 
